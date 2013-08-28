@@ -11,8 +11,8 @@
     "url": "https://github.com/SydneyStockholm/rotatedlog"
   },
   "devDependencies": {
-    "mocha": "*",
-    "istanbul": "*"
+    "mocha": "latest",
+    "istanbul": "latest"
   },
   "engines": {
     "node": ">= 0.10.0"
