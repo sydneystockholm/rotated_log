@@ -1,0 +1,21 @@
+{
+  "name": "rotatedlog",
+  "version": "0.1.0",
+  "description": "Stream a collection of rotated logs",
+  "main": "index.js",
+  "scripts": {
+    "test": "make check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SydneyStockholm/rotatedlog"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "istanbul": "*"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "author": "Sydney Stockholm <opensource@sydneystockholm.com>"
+}
