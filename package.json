@@ -1,6 +1,6 @@
 {
   "name": "rotatedlog",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Stream a collection of rotated logs",
   "main": "index.js",
   "scripts": {
