@@ -49,10 +49,6 @@ describe('Log stream', function () {
     it('should cat all log files when starting from 0', function (done) {
         log.stream(fixtures, 0, function (err, stream) {
             assert.ifError(err);
-            stream.on('data', function () {
-                stream.destroy();
-                done();
-            });
             var expected = '100 foo\n110 bar\n200 baz\n210 qux\n' +
                     '300 foo\n310 bar\n400 baz\n410 qux\n'
               , stdout = '';
@@ -74,10 +70,6 @@ describe('Log stream', function () {
     it('should cat all log files when no resume point is given', function (done) {
         log.stream(fixtures, function (err, stream) {
             assert.ifError(err);
-            stream.on('data', function () {
-                stream.destroy();
-                done();
-            });
             var expected = '100 foo\n110 bar\n200 baz\n210 qux\n' +
                     '300 foo\n310 bar\n400 baz\n410 qux\n'
               , stdout = '';
