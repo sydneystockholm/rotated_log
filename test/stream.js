@@ -5,45 +5,35 @@ var assert = require('assert')
 var fixtures = path.join(__dirname, 'fixtures', 'test.log')
   , empty = path.join(__dirname, 'fixtures', 'empty.log');
 
+function assertStreamEquals(stream, expected, done) {
+    var data = '';
+    stream.on('data', function (chunk) {
+        data += chunk.toString();
+        if (expected !== data && expected.indexOf(data) === 0) {
+            return;
+        }
+        assert.equal(data, expected);
+        stream.destroy();
+        done();
+    });
+    stream.on('end', function () {
+        assert(false, 'Expected stream to stay open');
+    });
+}
+
 describe('Log stream', function () {
 
     it('should tail the latest log file', function (done) {
         log.stream(fixtures, 410, function (err, stream) {
             assert.ifError(err);
-            var expected = '400 baz\n410 qux\n'
-              , stdout = '';
-            stream.on('data', function (chunk) {
-                stdout += chunk.toString();
-                if (expected !== stdout && expected.indexOf(stdout) === 0) {
-                    return;
-                }
-                assert.equal(stdout, expected);
-                stream.destroy();
-                done();
-            });
-            stream.on('end', function () {
-                assert(false, 'Expected stream to stay open');
-            });
+            assertStreamEquals(stream, '400 baz\n410 qux\n', done);
         });
     });
 
     it('should look backwards in time to find the start point', function (done) {
         log.stream(fixtures, 350, function (err, stream) {
             assert.ifError(err);
-            var expected = '300 foo\n310 bar\n400 baz\n410 qux\n'
-              , stdout = '';
-            stream.on('data', function (chunk) {
-                stdout += chunk.toString();
-                if (expected !== stdout && expected.indexOf(stdout) === 0) {
-                    return;
-                }
-                assert.equal(stdout, expected);
-                stream.destroy();
-                done();
-            });
-            stream.on('end', function () {
-                assert(false, 'Expected stream to stay open');
-            });
+            assertStreamEquals(stream, '300 foo\n310 bar\n400 baz\n410 qux\n', done);
         });
     });
 
@@ -51,20 +41,8 @@ describe('Log stream', function () {
         log.stream(fixtures, 0, function (err, stream) {
             assert.ifError(err);
             var expected = '100 foo\n110 bar\n200 baz\n210 qux\n' +
-                    '300 foo\n310 bar\n400 baz\n410 qux\n'
-              , stdout = '';
-            stream.on('data', function (chunk) {
-                stdout += chunk.toString();
-                if (expected !== stdout && expected.indexOf(stdout) === 0) {
-                    return;
-                }
-                assert.equal(stdout, expected);
-                stream.destroy();
-                done();
-            });
-            stream.on('end', function () {
-                assert(false, 'Expected stream to stay open');
-            });
+                '300 foo\n310 bar\n400 baz\n410 qux\n';
+            assertStreamEquals(stream, expected, done);
         });
     });
 
@@ -72,40 +50,15 @@ describe('Log stream', function () {
         log.stream(fixtures, function (err, stream) {
             assert.ifError(err);
             var expected = '100 foo\n110 bar\n200 baz\n210 qux\n' +
-                    '300 foo\n310 bar\n400 baz\n410 qux\n'
-              , stdout = '';
-            stream.on('data', function (chunk) {
-                stdout += chunk.toString();
-                if (expected !== stdout && expected.indexOf(stdout) === 0) {
-                    return;
-                }
-                assert.equal(stdout, expected);
-                stream.destroy();
-                done();
-            });
-            stream.on('end', function () {
-                assert(false, 'Expected stream to stay open');
-            });
+                '300 foo\n310 bar\n400 baz\n410 qux\n';
+            assertStreamEquals(stream, expected, done);
         });
     });
 
     it('should handle empty logs and empty archived logs', function (done) {
         log.stream(empty, function (err, stream) {
             assert.ifError(err);
-            var expected = '100 foo\n'
-              , stdout = '';
-            stream.on('data', function (chunk) {
-                stdout += chunk.toString();
-                if (expected !== stdout && expected.indexOf(stdout) === 0) {
-                    return;
-                }
-                assert.equal(stdout, expected);
-                stream.destroy();
-                done();
-            });
-            stream.on('end', function () {
-                assert(false, 'Expected stream to stay open');
-            });
+            assertStreamEquals(stream, '100 foo\n', done);
         });
     });
 
