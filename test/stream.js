@@ -2,7 +2,8 @@ var assert = require('assert')
   , path = require('path')
   , log = require('../lib/stream');
 
-var fixtures = path.join(__dirname, 'fixtures', 'test.log');
+var fixtures = path.join(__dirname, 'fixtures', 'test.log')
+  , empty = path.join(__dirname, 'fixtures', 'empty.log');
 
 describe('Log stream', function () {
 
@@ -72,6 +73,26 @@ describe('Log stream', function () {
             assert.ifError(err);
             var expected = '100 foo\n110 bar\n200 baz\n210 qux\n' +
                     '300 foo\n310 bar\n400 baz\n410 qux\n'
+              , stdout = '';
+            stream.on('data', function (chunk) {
+                stdout += chunk.toString();
+                if (expected !== stdout && expected.indexOf(stdout) === 0) {
+                    return;
+                }
+                assert.equal(stdout, expected);
+                stream.destroy();
+                done();
+            });
+            stream.on('end', function () {
+                assert(false, 'Expected stream to stay open');
+            });
+        });
+    });
+
+    it('should handle empty logs and empty archived logs', function (done) {
+        log.stream(empty, function (err, stream) {
+            assert.ifError(err);
+            var expected = '100 foo\n'
               , stdout = '';
             stream.on('data', function (chunk) {
                 stdout += chunk.toString();
