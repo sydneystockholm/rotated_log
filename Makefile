@@ -29,7 +29,7 @@ check-deps:
 		npm install -d; \
 	fi
 
-coverage:
+coverage: check-deps
 	@./node_modules/.bin/istanbul cover \
 		./node_modules/.bin/_mocha -- -R spec
 
@@ -39,4 +39,7 @@ coverage-html: coverage
 clean:
 	@rm -rf coverage
 
-.PHONY: dependencies test coverage coverage-html
+lint: check-deps
+	@./node_modules/.bin/jshint -c ./.jshintrc lib test
+
+.PHONY: dependencies test coverage coverage-html lint

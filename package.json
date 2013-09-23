@@ -12,7 +12,8 @@
   },
   "devDependencies": {
     "mocha": "latest",
-    "istanbul": "latest"
+    "istanbul": "latest",
+    "jshint": "latest"
   },
   "engines": {
     "node": ">= 0.10.0"
